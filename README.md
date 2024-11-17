@@ -1,5 +1,5 @@
-# Legacy SoarClient
-The project is mainly aimed at a modern and powerful PvP client developed by EldoDebug!
+<p align="center"><img src="/.github/Resources/logo.png" alt="Legacy SoarClient" title="Legacy SoarClient"></p>
+The project is mainly aimed at being a modern and powerful PvP client developed by EldoDebug!
 
 ## How to launch
 Download SoarClient.zip from the release page and run start.bat
