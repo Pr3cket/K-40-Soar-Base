@@ -1,17 +1,14 @@
+// For those who want the bleeding edge
 buildscript {
     repositories {
         mavenCentral()
-        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
         maven {
-            name = 'sponge'
-            url = 'https://repo.spongepowered.org/maven'
-        }
-        maven {
-            url = 'https://jitpack.io'
+            name = 'spongepowered'
+            url = 'https://repo.spongepowered.org/repository/maven-public'
         }
     }
     dependencies {
@@ -20,38 +17,61 @@ buildscript {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'java'
 
-version = "Release"
-group= "me.eldodebug"
-archivesBaseName = "SoarClient"
+def properties = new Properties()
+file('k40.properties').withInputStream { properties.load(it) }
+
+version = properties.getProperty("version")
+group = properties.getProperty("group") // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = properties.getProperty("modid")
 
 sourceCompatibility = targetCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
 
+// 打印
+printf("\n"
+        + properties.getProperty("line1") + "\n"
+        + properties.getProperty("line2") + "\n "
+        + properties.getProperty("line3") + "\n "
+        + properties.getProperty("line4") + "\n "
+        + properties.getProperty("line5") + "\n "
+        + properties.getProperty("line6") + "\n"
+        + properties.getProperty("line7") + "\n"
+        + "\n"
+)
+
 minecraft {
-    version = "1.8.9"
-    tweakClass = "me.eldodebug.soar.injection.mixin.SoarTweaker"
-    runDir = "run"
+    version = "1.8.9-11.15.1.2318-1.8.9"
+    coreMod = "${group}.injection.core.KaliLoader"
+
+    // 置顶
+    runDir = ".workspace"
+
+    // the mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   snapshot are built nightly.
+    // stable_#            stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not allways work.
+    // simply re-run your setup task after changing the mappings to update your workspace.
     mappings = "stable_22"
-    clientJvmArgs = ["-XX:-DisableExplicitGC"]
-    makeObfSourceJar = false
+    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+
+    replace '${modid}', project.archivesBaseName
+    replace '${version}', project.version
+
+    if (gradle.startParameter.projectProperties['releaseCache']) {
+        replace '${debug}', "false"
+    } else {
+        replace '${debug}', "true"
+    }
+
+    replaceIn "KaliAPI.java"
 }
 
-repositories {
-    maven {
-        name "jitpack"
-        url "https://jitpack.io"
-    }
-
-    maven {
-        name "spongepowered"
-        url "https://repo.spongepowered.org/maven/"
-    }
-    jcenter()
-    mavenCentral()
+mixin {
+    defaultObfuscationEnv = searge
+    add sourceSets.main, "mixins.annotationProcessor.refmap.json"
 }
 
 configurations {
@@ -59,51 +79,99 @@ configurations {
     compile.extendsFrom(embed)
 }
 
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spongepowered'
+        url = 'https://repo.spongepowered.org/repository/maven-public'
+    }
+}
+
 dependencies {
+    // you may put jars on which you depend on in ./libs
+
+    // *yeah, i did it :)
+    implementation fileTree(dir: 'libs', includes: ['**/*.jar'])
+
+    // or you may define them like so..
+    //compile "some.group:artifact:version:classifier"
+    //compile "some.group:artifact:version"
+
+    // real examples
+    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+
+    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
+    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
+    // except that these dependencies get remapped to your current MCP mappings
+    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // for more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+    // mixin
     embed('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
         exclude module: 'launchwrapper'
         exclude module: 'guava'
         exclude module: 'gson'
         exclude module: 'commons-io'
     }
-}
 
-mixin {
-    defaultObfuscationEnv = "notch"
-    add sourceSets.main, "mixins.soar.refmap.json"
+    // 注解器
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.spongepowered:mixin:0.7.11-SNAPSHOT'
 }
 
 processResources {
-    inputs.files "src/main/resources"
-    outputs.dir "build/classes/main"
-    copy {
-        from("src/main/resources")
-        into("build/classes/main")
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "modid", archivesBaseName
+    inputs.property "name", properties.getProperty("name")
+    inputs.property "version", project.version
+    inputs.property "mcversion", minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace modid, name, version and mcversion
+        expand 'modid': archivesBaseName,
+                'name': properties.getProperty("name"),
+                'version': project.version,
+                'mcversion': minecraft.version
+    }
+
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
     }
 }
 
 jar {
-    dependsOn configurations.compile
-    from {
-        configurations.embed.collect {
+    if (gradle.startParameter.projectProperties['releaseCache']) {
+        from(configurations.embed.collect {
             it.isDirectory() ? it : zipTree(it)
+        })
+
+        fileTree(dir: 'libs', includes: ['**/*.jar']).each { jarFile ->
+            from project.zipTree(jarFile)
         }
-    }
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-}
 
-jar {
-    manifest.attributes(
-            "MixinConfigs": 'mixins.soar.json',
-            "TweakClass": 'me.eldodebug.soar.injection.mixin.SoarTweaker',
-            "TweakOrder": 0,
-            "Manifest-Version": 1.0,
-            'FMLAT': 'soar_at.cfg'
-    )
-
-    configurations.embed.each { dep ->
-        from(project.zipTree(dep)) {
-            exclude 'META-INF', 'META-INF/**'
+        manifest {
+            attributes(
+                    'MixinConfigs': "mixins.${archivesBaseName}.json",
+                    'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+                    'TweakOrder': 0,
+                    "FMLCorePlugin": "${group}.injection.core.KaliLoader",
+                    "ForceLoadAsMod": true,
+                    'FMLCorePluginContainsFMLMod': true,
+                    "ModSide": "CLIENT"
+            )
         }
     }
 }

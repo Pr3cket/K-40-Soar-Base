@@ -1,0 +1,21 @@
+{
+    "block.anvil.destroy": "Кавадлаў знічана",
+    "block.anvil.land": "Кавадлаў скінута",
+    "block.anvil.use": "Кавадлаў выкарыстана",
+    "block.brewing_stand.brew": "Бурленне варачнай стойкі",
+    "block.button.click": "Пстрык кнопкі",
+    "block.chest.close": "Куфар закрываецца",
+    "block.chest.open": "Куфар адкрываецца",
+    "block.chorus_flower.death": "Кветка хорусу блякне",
+    "block.chorus_flower.grow": "Кветка хорусу расце",
+    "block.comparator.click": "Пстрык параўнальніка",
+    "block.door.toggle": "Рып дзвярэй",
+    "block.fence_gate.toggle": "Рып брамкі",
+    "block.fire.ambient": "Трэск агню",
+    "block.fire.extinguish": "Агонь патушаны",
+    "block.furnace.fire_crackle": "Трэск печкі",
+    "block.generic.break": "Блок зламаны",
+    "block.generic.footsteps": "Крокі",
+    "block.generic.hit": "Стук па блоку",
+    "block.generic.place": "Блок размешчаны"
+}

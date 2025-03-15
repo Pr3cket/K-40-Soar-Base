@@ -1,0 +1,8 @@
+プロジェクトは開発段階であり、言語文書は頻繁に変動するため、日本語は削除される。
+開発が遅れると日本語やその他の常用言語が追加されます
+
+由于项目为开发阶段，语言文件频繁变动，因此删除日语。
+开发暂缓时会添加日语和其它常用语言
+
+Due to the project being in the development phase and frequent changes in language files, Japanese has been removed.
+Japanese and other commonly used languages will be added during the development delay

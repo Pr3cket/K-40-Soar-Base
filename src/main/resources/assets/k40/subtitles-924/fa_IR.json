@@ -1,0 +1,11 @@
+{
+    "block.anvil.destroy": "سندان نابود شد",
+    "block.anvil.use": "سندان استفاده شد",
+    "block.fire.ambient": "جلز و ولز آتش",
+    "block.fire.extinguish": "خاموش شدن آتش",
+    "block.furnace.fire_crackle": "جلز و ولز کوره",
+    "entity.bat.death": "مردن خفاش",
+    "entity.donkey.ambient": "عرعر الاغ",
+    "entity.donkey.death": "مردن الاغ",
+    "entity.horse.ambient": "شیهه اسب"
+}

@@ -1,0 +1,19 @@
+[
+  {
+    "modid": "${modid}",
+    "name": "${name}",
+    "description": "Hacked Client for Minecraft 1.8.9. A fork of Soar Client written by EldoDebug.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://www.soarclient.com/",
+    "updateUrl": "",
+    "authorList": [
+      "EldoDebug",
+      "Nan7i.\u5357\u8D77"
+    ],
+    "credits": "Nan7 and other K-40 development guys, for making this.",
+    "logoFile": "assets/k40/textures/background.jpeg",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

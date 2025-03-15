@@ -1,0 +1,20 @@
+{
+    "block.anvil.destroy": "Наковалня е унищожена",
+    "block.anvil.land": "Наковалня падна",
+    "block.anvil.use": "Наковалня е използвана",
+    "block.brewing_stand.brew": "Бълбукане на статив за отвари",
+    "block.button.click": "Натискане на бутон",
+    "block.chest.close": "Затваряне на сандък",
+    "block.chest.open": "Отваряне на сандък",
+    "block.generic.footsteps": "Стъпки",
+    "block.generic.hit": "Чупене на блокче",
+    "block.generic.place": "Слагане на блокче",
+    "entity.cow.death": "Умиране на крава",
+    "entity.witch.ambient": "Кикотене на вещица",
+    "entity.witch.death": "Умиране на вещица",
+    "item.bottle.fill": "Пълнене на стъкленица",
+    "item.bucket.empty": "Изпразване на кофа",
+    "item.bucket.fill": "Пълнене на кофа",
+    "item.chorus_fruit.teleport": "Телепортиране на играч",
+    "weather.rain": "Падане на дъжд"
+}
